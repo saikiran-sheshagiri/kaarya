@@ -1,0 +1,27 @@
+{
+  "name": "kaarya",
+  "version": "1.0.0",
+  "description": "kaarya is a task scheduler and is a great utility for managing a lot of work",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d build",
+    "start": "node build/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://saikiran78@github.com/saikiran78/kaarya.git"
+  },
+  "author": "Saikiran Sheshagiri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saikiran78/kaarya/issues"
+  },
+  "homepage": "https://github.com/saikiran78/kaarya#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0"
+  }
+}
