@@ -4,6 +4,7 @@
   "description": "kaarya is a task scheduler and is a great utility for managing a lot of work",
   "main": "index.js",
   "scripts": {
+    "debug": "node --nolazy --debug=5858 build/server.js",
     "build": "babel src -d build",
     "start": "node build/server.js"
   },

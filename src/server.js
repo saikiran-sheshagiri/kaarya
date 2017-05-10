@@ -1,16 +1,11 @@
 import express from 'express';
+import router from './router'
 
 const app = express();
 
-const router = express.Router();
+//mount the routes on api
+app.use('/api', router);
 
-router.get('/', (request, response) => {
-    response.send('Hello World...!!!');
-})
-
-app.use(router);
-
-const server = app.listen(3000, () => {
-    const {address, port} = server.address();
-    console.log(`Example running on at http://${address}: ${port}`);
+app.listen(3000, () => {
+    console.log(`Example running on at 3000`);
 });
