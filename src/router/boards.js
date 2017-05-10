@@ -1,25 +1,26 @@
 import express from 'express';
+import boardController from '../controllers/boardController'
 
 const router = express.Router();
 
 router.route('/')
     /** Get all boards */
     .get((request, response, next) => {
-        response.send('Getting all boards');
+        boardController.getAll(request, response);
     })
     /** Create a new board */
     .post((request, response, next) => {
-        response.send('Saving a new board to the boards collection');
+        boardController.save(request, response);
     });
 
 router.route('/:boardId')
     /** Get a board with ID */
     .get((request, response, next) => {
-        response.send('Get a single board with Id: ' + boardId);
+        boardController.getById(request.params.boardId, request, response);
     })
     /** Update a board */
     .put((request, response, next) => {
-        response.send('Updating the baord with id: ' + boardId);
+        boardController.update(request.params.boardId, request, response);
     })
     .delete((request, response, next) => {
         response.send('deleting board with id: ' + boardId);

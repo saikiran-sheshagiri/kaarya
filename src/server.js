@@ -1,8 +1,15 @@
 import express from 'express';
-import router from './router'
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+
+
+import router from './router';
 
 const app = express();
+
+// parse body params and attache them to req.body
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //connect to the mongodb instance
 mongoose.connect('mongodb://localhost:27017/kaarya');
