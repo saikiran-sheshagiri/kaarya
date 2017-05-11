@@ -31,8 +31,7 @@ class BoardController {
     }
 
     update(id, request, response) {
-        let query = { _id: id }
-        Board.findOneAndUpdate(query, { title: request.body.title }, (error, updatedBoard) => {
+        Board.findByIdAndUpdate(id, { title: request.body.title }, { new: true }, (error, updatedBoard) => {
             if(error)
                 response.send('Unable to find board with id: ' + id + '. ' + error);
             else
@@ -40,8 +39,13 @@ class BoardController {
         });
     }
 
-    delete() {
-        
+    delete(id, request, response) {
+        Board.findByIdAndRemove(id, (error, removedBoard) => {
+            if(error)
+                response.send('Unable to remove the document with id: ' + id + '. ' + error);
+            else
+                response.json(removedBoard);
+        });
     }
 
 }

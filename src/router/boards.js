@@ -22,8 +22,9 @@ router.route('/:boardId')
     .put((request, response, next) => {
         boardController.update(request.params.boardId, request, response);
     })
+    /** Remove a board */
     .delete((request, response, next) => {
-        response.send('deleting board with id: ' + boardId);
+        boardController.delete(request.params.boardId, request, response);
     });
 
 export default router;
