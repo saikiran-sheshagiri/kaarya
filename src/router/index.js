@@ -1,5 +1,6 @@
 import express from 'express';
 import boardsRouter from './boards';
+import categoriesRouter from './categories';
 
 const router = express.Router();
 
@@ -9,5 +10,6 @@ router.get('/heartbeat', (request, response) => {
 });
 
 router.use('/boards', boardsRouter);
+router.use('/categories', categoriesRouter);
 
 export default router;

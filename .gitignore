@@ -39,3 +39,6 @@ jspm_packages
 
 # VS code settings
 .vscode
+
+.DS_Store
+.project
