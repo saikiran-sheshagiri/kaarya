@@ -1,4 +1,5 @@
 import Categories from '../models/category';
+import Task from '../models/task';
 
 class CategoriesController {
 
@@ -17,7 +18,7 @@ class CategoriesController {
 		const category = new Categories({
 			title: request.body.title,
 			boardId: request.body.boardId
-		});
+			});			
 		category.save().then((category) => {
 			response.json(category);
 		});
@@ -43,5 +44,61 @@ class CategoriesController {
 				response.json(removeCategory);
 		});
 	}
+
+	getCategoriesForCategoryId(categoryId, request, response) {
+		Categories.findById(categoryId, (error, categories) => {
+			if (error)
+				response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+			else
+				response.json(categories);
+		});
+	}
+
+	saveTask(categoryId,request, response) {
+		const category = getCategoriesForCategoryId(categoryId,request, response);
+		category.tasks.push({
+				title : request.body.tasks[0].title,
+				desc : request.body.tasks[0].desc,
+				position : request.body.tasks[0].position
+				});
+			var subdoc = category.tasks[0];
+			console.log(subdoc) // { _id: '501d86090d371bab2c0341c5', name: 'Liesl' }
+			subdoc.isNew;					
+		category.save().then((category) => {
+			response.json(category);
+		});
+	}
+
+	deleteTask(categoryId,taskId,request, response) {
+		const category = getCategoriesForCategoryId(categoryId,request, response);
+		category.tasks.id(taskId).remove();		
+		category.save(function (err) {
+		if (err) return handleError(err);
+		console.log('the task: ' +taskId +' were removed from category ' + categoryId);
+		});
+	}
+
+	updateTask(categoryId,request, response){		
+		Categories.findOneAndUpdate({ "_id": categoryId, "tasks._id": request.body.tasks[0]._id },
+    	{ 
+        "$set": {
+            "tasks.$": request.body.tasks[0]
+        	}
+    	},
+    	function(error,updatedDoc) {
+			if (error)
+				response.send('Unable to update task for category id: ' + categoryId + '. ' + error);
+			else
+				response.json(updatedDoc);
+    	});
+	}
+
+	getTaskByCategoryId(categoryId,taskId,request, response){
+		const category = getCategoriesForCategoryId(categoryId,request, response);
+		const task = category.tasks.id(taskId);
+		response.json(task);
+	}
 }
+
+	
 export default new CategoriesController();

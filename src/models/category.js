@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import Task from './task';
 
 const categoriesSchema = new mongoose.Schema({
 	title : String,
-	boardId : String
+	boardId : String,	
+	tasks : [Task]
 	
 });
 
