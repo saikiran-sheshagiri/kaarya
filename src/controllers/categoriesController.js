@@ -13,7 +13,11 @@ class CategoriesController {
 	}
 
 	save(request, response) {
-		const category = new Categories({title: request.body.title, boardId: request.body.boardId});
+		const category = new Categories({
+			title: request.body.title, 
+			boardId: request.body.boardId,
+			tasks: []	//defaulting tasks to empty
+		});
 		category
 			.save()
 			.then((category) => {

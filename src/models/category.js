@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import Task from './task';
+import { taskSchema, Task } from './task';
 
 const categoriesSchema = new mongoose.Schema({
 	title : String,
 	boardId : String,	
-	tasks : [Task]
+	tasks : [taskSchema]
 	
 });
 

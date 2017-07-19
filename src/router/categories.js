@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.route('/')
     /* Create new categorie */
-    .post((request,response,next) => {
-        categoriesController.save(request,response);
+    .post((request, response, next) => {
+        categoriesController.save(request, response);
     });
 
 router.route('/:boardId')
