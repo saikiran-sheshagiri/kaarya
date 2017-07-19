@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 
 import router from './router';
@@ -21,10 +22,12 @@ mongoose.connection.once('open', () => {
     console.log('Connected to local instance of the database');
 });
 
+//enable cors
+app.use(cors());
 
 //mount the routes on api
 app.use('/api', router);
 
-app.listen(3000, () => {
-    console.log(`Example running on at 3000`);
+app.listen(4747, () => {
+    console.log(`Example running on at 4747`);
 });
