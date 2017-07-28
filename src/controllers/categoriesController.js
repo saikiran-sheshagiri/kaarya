@@ -3,7 +3,7 @@ import Task from '../models/task';
 
 class CategoriesController {
 
-	getCategoriesForBoard(boardId, request, response) {
+	getAll(boardId, request, response) {
 		Categories
 			.find({ boardId: boardId }, 
 				(error, categories) => {
@@ -11,11 +11,20 @@ class CategoriesController {
 					else response.json(categories);
 				});
 	}
+	
+	getById(categoryId, request, response) {
+		Categories
+			.findById(categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else response.json(category);
+				});
+	}
 
 	save(request, response) {
 		const category = new Categories({
 			title: request.body.title, 
-			boardId: request.body.boardId,
+			boardId: request.params.boardId,
 			tasks: []	//defaulting tasks to empty
 		});
 		category
@@ -27,7 +36,7 @@ class CategoriesController {
 
 	update(id, request, response) {
 		Categories
-		.findByIdAndUpdate(id, { title: request.body.title, boardId: request.body.boardId}, { new: true }, 
+		.findByIdAndUpdate(id, { title: request.body.title }, { new: true }, 
 			(error, updatedCategory) => {
 				if (error) response.send('Unable to find category with id: ' + id + '. ' + error);
 				else response.json(updatedCategory);
@@ -43,71 +52,63 @@ class CategoriesController {
 			});
 	}
 
-	/** private function */
-	getCategory(categoryId) {
-		Categories
-			.findById(categoryId, 
-				(error, category) => {
-					if (error) return null;
-					else return category;
-				});
-	}
+	
 
-	saveTask(categoryId, request, response) {
-		const category = getCategory(categoryId);
-		if (category != null) {
-			category.tasks.push({
-								title: request.body.tasks[0].title, 
-								desc: request.body.tasks[0].desc, 
-								position: request.body.tasks[0].position
-							});
-			var subdoc = category.tasks[0];
-			console.log(subdoc) // { _id: '501d86090d371bab2c0341c5', name: 'Liesl' }
-			subdoc.isNew;
-			category
-				.save()
-				.then((category) => {
-					response.json(category);
-				});
-		} else {
-			response.json(null);
-		}
-	}
+	// saveTask(categoryId, request, response) {
+	// 	const category = getCategory(categoryId);
+	// 	if (category != null) {
+	// 		category.tasks.push({
+	// 							title: request.body.tasks[0].title, 
+	// 							desc: request.body.tasks[0].desc, 
+	// 							position: request.body.tasks[0].position
+	// 						});
+	// 		var subdoc = category.tasks[0];
+	// 		console.log(subdoc) // { _id: '501d86090d371bab2c0341c5', name: 'Liesl' }
+	// 		subdoc.isNew;
+	// 		category
+	// 			.save()
+	// 			.then((category) => {
+	// 				response.json(category);
+	// 			});
+	// 	} else {
+	// 		response.json(null);
+	// 	}
+	// }
 
-	deleteTask(categoryId, taskId, request, response) {
-		const category = getCategory(categoryId);
-		if (category != null) {
-			category
-				.tasks
-				.id(taskId)
-				.remove();
-			category
-				.save(function (err) {
-					if (err) return handleError(err);
-					console.log('the task: ' + taskId + ' were removed from category ' + categoryId);
-				});
-		}
-	}
+	// deleteTask(categoryId, taskId, request, response) {
+	// 	const category = getCategory(categoryId);
+	// 	if (category != null) {
+	// 		category
+	// 			.tasks
+	// 			.id(taskId)
+	// 			.remove();
+	// 		category
+	// 			.save(function (err) {
+	// 				if (err) return handleError(err);
+	// 				console.log('the task: ' + taskId + ' were removed from category ' + categoryId);
+	// 			});
+	// 	}
+	// }
 
-	updateTask(categoryId, request, response) {
-		Categories
-			.findOneAndUpdate({ "_id": categoryId, "tasks._id": request.body.tasks[0]._id }, 
-								{ "$set": { "tasks.$": request.body.tasks[0] } }, 
-								(error, updatedDoc) => { 
-									if (error) response.send('Unable to update task for category id: ' + categoryId + '. ' + error);
-									else response.json(updatedDoc);
-							});
-	}
+	// updateTask(categoryId, request, response) {
+	// 	Categories
+	// 		.findOneAndUpdate({ "_id": categoryId, "tasks._id": request.body.tasks[0]._id }, 
+	// 							{ "$set": { "tasks.$": request.body.tasks[0] } }, 
+	// 							(error, updatedDoc) => { 
+	// 								if (error) response.send('Unable to update task for category id: ' + categoryId + '. ' + error);
+	// 								else response.json(updatedDoc);
+	// 						});
+	// }
 
-	getTaskByCategoryId(categoryId, taskId, request, response) {
-		const category = getCategory(categoryId);
-		if (category != null) {
-			const task = category.tasks.id(taskId);
-			response.json(task);
-		} else { 
-			response.json(null); 
-		}
-	}
+	// getTaskByCategoryId(categoryId, taskId, request, response) {
+	// 	const category = getCategory(categoryId);
+	// 	if (category != null) {
+	// 		const task = category.tasks.id(taskId);
+	// 		response.json(task);
+	// 	} else { 
+	// 		response.json(null); 
+	// 	}
+	// }
 }
 
 export default new CategoriesController();

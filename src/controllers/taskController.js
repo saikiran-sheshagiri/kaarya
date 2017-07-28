@@ -1,42 +1,87 @@
-import Task from '../models/task';
+import {taskSchema, Task } from '../models/task';
+import Categories from '../models/category';
 
-class taskController {
+class TasksController {
+
+    getAll(request, response){
+        Categories
+			.findById(request.params.categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else {
+                        response.json(category.tasks);
+                    };
+				});
+    }
+
+    getById(taskId, request, response) {
+        Categories
+			.findById(request.params.categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else {
+                        const task = category.tasks.id(taskId);
+                        if(task) response.json(task);
+                        else response.send('unable to find the task with id: ' + taskId);
+                    };
+				});
+    }
 
     save(request,response){
-        const task = new Task({
-            title : request.body.title,
-            desc: request.body.desc,
-            position : request.body.position
-        });
-        task.save().then((task) => {
-            response.json(task);
-        });
+
+        Categories
+			.findById(request.params.categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else {
+                        category.tasks.push({
+                                                title : request.body.title,
+                                                desc: request.body.desc,
+                                                position : request.body.position
+                                            });
+                        category.save((error, category) => {
+                            if (error) response.send('unable to save task');
+                            else response.json(category);
+                        })
+                    };
+				});
     }
 
-    update(id,request, response){
-        Task.findByIdAndUpdate(id,{
-                               title: request.body.title,
-                               desc : request.body.desc,
-                               position: request.body.position},
-                               { new: true }, 
-                               (error,updatedTask) => {
-                                    if (error)
-                                        response.send('Unable to find task with id: ' + id + '. ' + error);
-                                    else
-                                        response.json(updatedTask);
-                               });
+    update(taskId,request, response){
+        Categories
+			.findById(request.params.categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else {
+                        let task = category.tasks.id(taskId);
+
+                        task.title = request.body.title;
+                        task.desc = request.body.desc;
+                        task.position = request.body.position;
+
+                        category.save((error, category) => {
+                            if (error) response.send('unable to save task');
+                            else response.json(category);
+                        })
+                    };
+				});
     }
 
-    delete(id,request,response){
-        Task.findByIdAndRemove(id,(error,removedTask) => {
-            if (error)
-				response.send('unable to remove task document with id : ' + id + '. ' + error);
-			else
-				response.json(removedTask);
-        });
-    }
+    delete(taskId, request, response){
+        Categories
+			.findById(request.params.categoryId, 
+				(error, category) => {
+					if (error) response.send('Unable to find category with category id: ' + categoryId + '. ' + error);
+					else {
+                        category.tasks.pull(taskId);
 
-    getTasksByCategory(categoryId,request,response){
-
+                        category.save((error, category) => {
+                            if (error) response.send('unable to save task');
+                            else response.json(category);
+                        })
+                    };
+				});
     }
 }
+
+export default new TasksController();

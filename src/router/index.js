@@ -11,7 +11,8 @@ router.get('/heartbeat', (request, response) => {
 });
 
 router.use('/boards', boardsRouter);
-router.use('/categories', categoriesRouter);
-router.use('/tasks', tasksRouter);
+boardsRouter.use('/:boardId/categories', categoriesRouter);
+
+categoriesRouter.use('/:categoryId/tasks', tasksRouter);
 
 export default router;
